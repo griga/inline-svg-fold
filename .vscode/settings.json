@@ -34,4 +34,5 @@
 	},
 	"workbench.sideBar.location": "right",
 	"window.zoomLevel": 0,
+	"editor.lineNumbers": "off",
 }

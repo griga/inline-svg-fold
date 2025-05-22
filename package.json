@@ -23,16 +23,28 @@
   "contributes": {
     "commands": [
       {
-        "command": "inline-svg-fold.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "inline-svg-fold.foldAllSvg",
+        "category": "Inline SVG Fold",
         "title": "Fold All SVGs in File"
       },
       {
         "command": "inline-svg-fold.unfoldAllSvg",
+        "category": "Inline SVG Fold",
         "title": "Unfold All SVGs in File"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "inline-svg-fold.foldAllSvg",
+        "key": "ctrl+alt+f",
+        "mac": "cmd+alt+f",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "inline-svg-fold.unfoldAllSvg",
+        "key": "ctrl+alt+u",
+        "mac": "cmd+alt+u",
+        "when": "editorTextFocus"
       }
     ],
     "configuration": {
@@ -61,6 +73,12 @@
           "type": "string",
           "default": "#ccccccaa",
           "description": "Color of rendered SVG elements in the editor."
+        },
+        "inline-svg-fold.autoFold": {
+          "order": 4,
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically fold all inline SVG blocks when a supported file is opened."
         }
       }
     }
