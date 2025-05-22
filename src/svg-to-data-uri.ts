@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
+import { getSetting, settings } from './configuration';
 
-export function svgToDataUri(svg: string): string {
+export function svgToDataUri(svg: string, color: string): string {
   // Extract viewBox from original SVG
   const viewBoxMatch = svg.match(/viewBox="([^"]*)"/);
   const viewBox = viewBoxMatch ? `viewBox=\"${viewBoxMatch[1]}\"` : '';
-  console.log('[extension] viewBox', viewBox);
   // Get font size and calculate width/height
   const fontSize = vscode.workspace.getConfiguration('editor').get('fontSize') as number;
   const scaleFactor = 1;
@@ -20,11 +20,12 @@ export function svgToDataUri(svg: string): string {
     paths.push(`<path d=\"${d}\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>`);
   }
 
+
   // Compose new SVG string
   const newSvg = `
 		<svg xmlns="http://www.w3.org/2000/svg"  
 		  width=\"${width}\" height=\"${height}\" ${viewBox} 
-		  fill=\"none\" stroke-width=\"1\" stroke=\"red\">
+		  fill=\"none\" stroke-width=\"1\" stroke=\"${color}\">
 		    ${paths.join('')}
 		</svg>`;
   const minified = newSvg.replace(/\s{2,}/g, ' ').replace(/\n/g, '');

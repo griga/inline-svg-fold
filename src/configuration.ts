@@ -4,6 +4,9 @@ export const settings = {
   identifier: 'inline-svg-fold',
 
   supportedLanguages: 'supportedLanguages',
+
+  renderedSVGColorLight: 'renderedSVGColorLight',
+  renderedSVGColorDark: 'renderedSVGColorDark',
 } as const;
 
 export function setSetting(key: keyof typeof settings, value: any) {

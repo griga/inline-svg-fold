@@ -33,4 +33,5 @@
 		"README.md": "CHANGELOG.md, LICENSE.md, vsc-extension-quickstart.md"
 	},
 	"workbench.sideBar.location": "right",
+	"window.zoomLevel": 0,
 }

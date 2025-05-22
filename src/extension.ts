@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
   const foldingProvider = vscode.languages.registerFoldingRangeProvider(selector, new SvgFoldingProvider());
   context.subscriptions.push(foldingProvider);
 
-  // Custom SVG fold decoration logic
+  // Custom SVG fold decoration
   const decorationType = vscode.window.createTextEditorDecorationType({
     rangeBehavior: vscode.DecorationRangeBehavior.ClosedOpen,
     textDecoration: 'none; display: none;',
@@ -20,24 +20,25 @@ export function activate(context: vscode.ExtensionContext) {
   const onVisibleRangesChanged = vscode.window.onDidChangeTextEditorVisibleRanges((event) => {
     updateSvgFoldDecorations(decorationType, event.textEditor);
   });
+  context.subscriptions.push(onVisibleRangesChanged);
 
   // Also update when active editor changes
   const onActiveEditorChange = vscode.window.onDidChangeActiveTextEditor((editor) => {
     if (editor) updateSvgFoldDecorations(decorationType, editor);
   });
+  context.subscriptions.push(onActiveEditorChange);
 
+  // Listen for configuration changes
   const onConfigurationChange = vscode.workspace.onDidChangeConfiguration((event) => {
-    // if (event.affectsConfiguration(settings.identifier)) {
-    //   decorator.loadConfig();
-    // }
+    if (event.affectsConfiguration(settings.identifier) && vscode.window.activeTextEditor)
+      updateSvgFoldDecorations(decorationType, vscode.window.activeTextEditor);
   });
+  context.subscriptions.push(onConfigurationChange);
 
-  // // Initial update
-  // if (vscode.window.activeTextEditor) {
-  //   updateSvgFoldDecorations(decorationType, vscode.window.activeTextEditor);
-  // }
-
-  context.subscriptions.push(onVisibleRangesChanged, onActiveEditorChange, onConfigurationChange);
+  // Initial render
+  if (vscode.window.activeTextEditor) {
+    updateSvgFoldDecorations(decorationType, vscode.window.activeTextEditor);
+  }
 }
 
 // This method is called when your extension is deactivated

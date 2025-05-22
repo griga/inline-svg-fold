@@ -31,16 +31,28 @@
       "title": "Inline SVG Fold",
       "properties": {
         "inline-svg-fold.supportedLanguages": {
+          "order": 1,
           "type": "array",
           "default": [
             "html",
-            "xml",
             "javascript",
             "javascriptreact",
             "typescript",
             "typescriptreact"
           ],
           "description": "Languages in which inline SVG folding is enabled."
+        },
+        "inline-svg-fold.renderedSVGColorLight": {
+          "order": 2,
+          "type": "string",
+          "default": "#222222dd",
+          "description": "Color of rendered SVG elements in the editor."
+        },
+        "inline-svg-fold.renderedSVGColorDark": {
+          "order": 3,
+          "type": "string",
+          "default": "#ccccccaa",
+          "description": "Color of rendered SVG elements in the editor."
         }
       }
     }
