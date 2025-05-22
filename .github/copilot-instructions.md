@@ -14,7 +14,7 @@ It should detect SVG regions and allow users to fold/unfold them as logical bloc
 
 ## References
 
-- [tailwind-fold (GitHub)](https://github.dev/stivoat/tailwind-fold):  
+- [tailwind-fold (GitHub)](https://github.com/stivoat/tailwind-fold):  
   Reference for detecting and folding utility classes in Tailwind, including how to provide folding ranges and register language features.  
   Note how it parses and identifies regions and uses the VS Code FoldingRangeProvider API.
 
@@ -57,5 +57,5 @@ It should detect SVG regions and allow users to fold/unfold them as logical bloc
 
 ## References for Copilot
 
-- [tailwind-fold (GitHub)](https://github.dev/stivoat/tailwind-fold)
+- [tailwind-fold (GitHub)](https://github.com/stivoat/tailwind-fold)
 - [vscode-better-folding (GitHub)](https://github.com/mtbaqer/vscode-better-folding)

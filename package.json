@@ -25,6 +25,14 @@
       {
         "command": "inline-svg-fold.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "inline-svg-fold.foldAllSvg",
+        "title": "Fold All SVGs in File"
+      },
+      {
+        "command": "inline-svg-fold.unfoldAllSvg",
+        "title": "Unfold All SVGs in File"
       }
     ],
     "configuration": {

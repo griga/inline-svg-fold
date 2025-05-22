@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { getSetting, settings } from './configuration';
 
 export function svgToDataUri(svg: string, color: string): string {
   // Extract viewBox from original SVG
@@ -19,7 +18,6 @@ export function svgToDataUri(svg: string, color: string): string {
     const d = match[2];
     paths.push(`<path d=\"${d}\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>`);
   }
-
 
   // Compose new SVG string
   const newSvg = `
