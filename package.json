@@ -1,15 +1,24 @@
 {
   "name": "inline-svg-fold",
-  "displayName": "inline-svg-fold",
+  "displayName": "Inline SVG Fold",
   "description": "Fold inline SVG code blocks directly in your editor for improved readability.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.100.0"
   },
   "categories": [
-    "Other"
+    "Formatters"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "SVG",
+    "folding",
+    "inline",
+    "editor",
+    "visualization"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -17,7 +26,24 @@
         "command": "inline-svg-fold.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Inline SVG Fold",
+      "properties": {
+        "inline-svg-fold.supportedLanguages": {
+          "type": "array",
+          "default": [
+            "html",
+            "xml",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact"
+          ],
+          "description": "Languages in which inline SVG folding is enabled."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",

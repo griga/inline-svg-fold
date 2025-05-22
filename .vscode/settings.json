@@ -29,7 +29,8 @@
 	},
 	"peacock.color": "#0066b8",
 	"explorer.fileNesting.patterns": {
-		"package.json": ".gitignore, .npmrc, .vscodeignore, .vscode-test.mjs, eslint.config.mjs, pnpm-lock.yaml, tsconfig.json",
-		"README.md": "CHANGELOG.md, vsc-extension-quickstart.md"
+		"package.json": ".gitignore, .npmrc, .vscodeignore, .vscode-test.mjs, eslint.config.mjs, pnpm-lock.yaml, package-lock.json, .eslintrc.json, .prettierrc, tsconfig.json",
+		"README.md": "CHANGELOG.md, LICENSE.md, vsc-extension-quickstart.md"
 	},
+	"workbench.sideBar.location": "right",
 }

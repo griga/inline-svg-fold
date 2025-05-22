@@ -1,26 +1,46 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { SvgFoldingProvider } from './svg-folding.provider';
+import { getSetting, settings } from './configuration';
+import { updateSvgFoldDecorations } from './update-svg-fold-decorations';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  // Register SVG folding provider for supported languages
+  const selector = getSetting(settings.supportedLanguages, []).map((language) => ({ language, scheme: 'file' }));
+  const foldingProvider = vscode.languages.registerFoldingRangeProvider(selector, new SvgFoldingProvider());
+  context.subscriptions.push(foldingProvider);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "inline-svg-fold" is now active!');
+  // Custom SVG fold decoration logic
+  const decorationType = vscode.window.createTextEditorDecorationType({
+    rangeBehavior: vscode.DecorationRangeBehavior.ClosedOpen,
+    textDecoration: 'none; display: none;',
+  });
+  context.subscriptions.push(decorationType);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('inline-svg-fold.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('1111 Hello World from inline-svg-fold!');
-	});
+  // Listen for visible range changes (fold/unfold)
+  const onVisibleRangesChanged = vscode.window.onDidChangeTextEditorVisibleRanges((event) => {
+    updateSvgFoldDecorations(decorationType, event.textEditor);
+  });
 
-	context.subscriptions.push(disposable);
+  // Also update when active editor changes
+  const onActiveEditorChange = vscode.window.onDidChangeActiveTextEditor((editor) => {
+    if (editor) updateSvgFoldDecorations(decorationType, editor);
+  });
+
+  const onConfigurationChange = vscode.workspace.onDidChangeConfiguration((event) => {
+    // if (event.affectsConfiguration(settings.identifier)) {
+    //   decorator.loadConfig();
+    // }
+  });
+
+  // // Initial update
+  // if (vscode.window.activeTextEditor) {
+  //   updateSvgFoldDecorations(decorationType, vscode.window.activeTextEditor);
+  // }
+
+  context.subscriptions.push(onVisibleRangesChanged, onActiveEditorChange, onConfigurationChange);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate({ subscriptions }: vscode.ExtensionContext) {
+  subscriptions.forEach((subscription) => subscription.dispose());
+}
