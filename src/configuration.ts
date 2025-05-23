@@ -12,6 +12,7 @@ export const settings = {
 export const commands = {
   foldAllSvg: `${identifier}.foldAllSvg`,
   unfoldAllSvg: `${identifier}.unfoldAllSvg`,
+  debugInlineSvgFold: `${identifier}.debugInlineSvgFold`,
 };
 
 export const fallbacks = {

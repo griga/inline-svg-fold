@@ -18,6 +18,17 @@ export function activate(context: vscode.ExtensionContext) {
   const foldingProvider = vscode.languages.registerFoldingRangeProvider(selector, svgFoldManager);
   context.subscriptions.push(foldingProvider);
 
+  // Register debugInlineSvgFold command
+  vscode.commands.registerCommand(commands.debugInlineSvgFold, () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
+
+    svgFoldManager.provideFoldingRanges(editor.document).then((ranges) => {
+      console.log('SVG Folding Ranges:', ranges);
+      vscode.window.showInformationMessage(`Found ${ranges.length} SVG folding ranges`);
+    });
+  });
+
   // Register foldAllSvg command
   const foldAllSvgCmd = vscode.commands.registerCommand(commands.foldAllSvg, async () => {
     const editor = vscode.window.activeTextEditor;

@@ -31,6 +31,11 @@
         "command": "inline-svg-fold.unfoldAllSvg",
         "category": "Inline SVG Fold",
         "title": "Unfold All SVGs in File"
+      },
+      {
+        "command": "inline-svg-fold.debugInlineSvgFold",
+        "category": "Inline SVG Fold",
+        "title": "Debug Inline SVG Folding"
       }
     ],
     "keybindings": [

@@ -36,11 +36,7 @@ export class SvgFoldManager implements FoldingRangeProvider {
   constructor(private decorationType: TextEditorDecorationType) {}
 
   // Provide folding ranges for SVGs
-  public async provideFoldingRanges(
-    document: TextDocument,
-    context: FoldingContext,
-    token: CancellationToken
-  ): Promise<FoldingRange[]> {
+  public async provideFoldingRanges(document: TextDocument): Promise<FoldingRange[]> {
     const { foldingRanges } = await this.parseSvgRegions(document);
     return foldingRanges;
   }
