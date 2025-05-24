@@ -2,11 +2,8 @@ import {
   Position,
   type DecorationOptions,
   FoldingRange,
-  CancellationToken,
   ColorThemeKind,
   commands,
-  DecorationRenderOptions,
-  FoldingContext,
   FoldingRangeKind,
   FoldingRangeProvider,
   Range,
@@ -19,7 +16,7 @@ import {
 } from 'vscode';
 import { getSetting, settings } from './configuration';
 import { svgToDataUri } from './utils/svg-to-data-uri';
-import { areEqualSets, isSuperset } from './utils/lang.utils';
+import { areEqualSets } from './utils/lang.utils';
 
 // Regex to match <svg ...>...</svg> blocks, non-greedy and multiline
 const SVG_REGEX = /<svg[\s\S]*?<\/svg>/gi;
@@ -101,7 +98,7 @@ export class SvgFoldManager implements FoldingRangeProvider {
       );
       if (!foldingRange) continue;
       // If the start line is visible but the next line is not, it's folded
-      const isSvgFolded = editor.visibleRanges.every((vr) => !vr.contains(new Position(start.line + 1, 0)));
+      const isSvgFolded = this.isNextLineFolded(editor, start.line);
       if (isSvgFolded) {
         const dataUri = svgToDataUri(svg, renderColor);
         const decoration = this.createDecoration(doc, start, end, dataUri);
@@ -123,6 +120,10 @@ export class SvgFoldManager implements FoldingRangeProvider {
     }
   }
 
+  private isNextLineFolded(editor: TextEditor, line: number) {
+    return editor.visibleRanges.every((vr) => !vr.contains(new Position(line + 1, 0)));
+  }
+
   private createDecoration(doc: TextDocument, start: Position, end: Position, uri: string): DecorationOptions {
     return {
       range: new Range(start.line, start.character, start.line, doc.lineAt(start.line).text.length),
@@ -140,29 +141,37 @@ export class SvgFoldManager implements FoldingRangeProvider {
     return renderedSVGColor;
   }
 
-  // Batch fold all SVGs in the editor
+  // Batch fold all unfolded SVGs in the editor
   public async foldAllSvg(editor: TextEditor) {
-    const { foldingRanges } = await this.parseSvgRegions(editor.document);
+    const activeEditorSelection = editor.selection;
 
-    console.log('[svg-fold.manager] foldingRanges', foldingRanges)
-    // const selections = foldingRanges.map((range) => new Selection(range.start, 0, range.start, 0));
-    // editor.selections = selections;
-    await commands.executeCommand('editor.fold', { selectionLines: foldingRanges.map((range) => range.start) });
-    // Restore cursor to first selection
-    // if (selections.length > 0) {
-    //   editor.selection = selections[0];
-    // }
+    const { foldingRanges } = await this.parseSvgRegions(editor.document);
+    const unfoldedRanges = foldingRanges.filter((range) => !this.isNextLineFolded(editor, range.start));
+    if (unfoldedRanges.length === 0) return;
+    const selections = unfoldedRanges.map(
+      (range) => new Selection(range.start, 0, range.end, editor.document.lineAt(range.end).text.length)
+    );
+
+    editor.selections = selections;
+    await commands.executeCommand('editor.createFoldingRangeFromSelection');
+
+    editor.selection = activeEditorSelection;
   }
 
   // Batch unfold all SVGs in the editor
   public async unfoldAllSvg(editor: TextEditor) {
+    const activeEditorSelection = editor.selection;
+
     const { foldingRanges } = await this.parseSvgRegions(editor.document);
-    const selections = foldingRanges.map((range) => new Selection(range.start, 0, range.start, 0));
+    const foldedRanges = foldingRanges.filter((range) => this.isNextLineFolded(editor, range.start));
+    if (foldedRanges.length === 0) return;
+    const selections = foldedRanges.map(
+      (range) => new Selection(range.start, 0, range.end, editor.document.lineAt(range.end).text.length)
+    );
+
     editor.selections = selections;
     await commands.executeCommand('editor.unfold');
-    // Restore cursor to first selection
-    if (selections.length > 0) {
-      editor.selection = selections[0];
-    }
+
+    editor.selection = activeEditorSelection;
   }
 }
