@@ -29,6 +29,7 @@ export class SvgFoldManager implements FoldingRangeProvider {
   private documentSvgFoldingCache = new WeakMap<TextDocument, SvgFoldingData>();
   private documentDecorationsCache = new WeakMap<TextDocument, SvgVersionedDecorations>();
   private editorFoldedRangesCache = new WeakMap<TextEditor, Set<number>>();
+  private documentAutofolded = new WeakSet<TextDocument>();
 
   constructor(private decorationType: TextEditorDecorationType) {}
 
@@ -66,6 +67,12 @@ export class SvgFoldManager implements FoldingRangeProvider {
   public async update(editor: TextEditor, { force = false }: { force?: boolean } = {}) {
     if (!editor) return;
     if (!getSetting(settings.supportedLanguages).includes(editor.document.languageId)) return;
+
+    if (getSetting(settings.autoFold) && !this.documentAutofolded.has(editor.document)) {
+      this.documentAutofolded.add(editor.document);
+      this.foldAllSvg(editor);
+      return;
+    }
 
     const doc = editor.document;
     const renderColor = this.getRenderedSVGColor();

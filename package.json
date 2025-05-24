@@ -89,6 +89,7 @@
     }
   },
   "scripts": {
+    "dev:package": "pnpx vsce package --no-update-package-json   --no-git-tag-version",
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
